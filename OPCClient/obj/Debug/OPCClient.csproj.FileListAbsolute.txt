@@ -1,0 +1,8 @@
+E:\Program\Visual studio\OPC Kepserver\OPCClient\bin\Debug\OPCClient.exe.config
+E:\Program\Visual studio\OPC Kepserver\OPCClient\bin\Debug\OPCClient.exe
+E:\Program\Visual studio\OPC Kepserver\OPCClient\bin\Debug\OPCClient.pdb
+E:\Program\Visual studio\OPC Kepserver\OPCClient\obj\Debug\OPCClient.csproj.AssemblyReference.cache
+E:\Program\Visual studio\OPC Kepserver\OPCClient\obj\Debug\OPCClient.csproj.SuggestedBindingRedirects.cache
+E:\Program\Visual studio\OPC Kepserver\OPCClient\obj\Debug\OPCClient.csproj.CoreCompileInputs.cache
+E:\Program\Visual studio\OPC Kepserver\OPCClient\obj\Debug\OPCClient.exe
+E:\Program\Visual studio\OPC Kepserver\OPCClient\obj\Debug\OPCClient.pdb

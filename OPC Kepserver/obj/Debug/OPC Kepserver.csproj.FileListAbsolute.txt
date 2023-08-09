@@ -1,0 +1,14 @@
+E:\Program\Visual studio\OPC Kepserver\OPC Kepserver\bin\Debug\OPC Kepserver.exe.config
+E:\Program\Visual studio\OPC Kepserver\OPC Kepserver\bin\Debug\OPC Kepserver.exe
+E:\Program\Visual studio\OPC Kepserver\OPC Kepserver\bin\Debug\OPC Kepserver.pdb
+E:\Program\Visual studio\OPC Kepserver\OPC Kepserver\obj\Debug\OPC Kepserver.csproj.AssemblyReference.cache
+E:\Program\Visual studio\OPC Kepserver\OPC Kepserver\obj\Debug\OPC Kepserver.csproj.SuggestedBindingRedirects.cache
+E:\Program\Visual studio\OPC Kepserver\OPC Kepserver\obj\Debug\Interop.OPCAutomation.dll
+E:\Program\Visual studio\OPC Kepserver\OPC Kepserver\obj\Debug\OPC Kepserver.csproj.ResolveComReference.cache
+E:\Program\Visual studio\OPC Kepserver\OPC Kepserver\obj\Debug\OPC_Kepserver.Properties.Resources.resources
+E:\Program\Visual studio\OPC Kepserver\OPC Kepserver\obj\Debug\OPC Kepserver.csproj.GenerateResource.cache
+E:\Program\Visual studio\OPC Kepserver\OPC Kepserver\obj\Debug\OPC Kepserver.csproj.CoreCompileInputs.cache
+E:\Program\Visual studio\OPC Kepserver\OPC Kepserver\obj\Debug\OPC Kepserver.exe
+E:\Program\Visual studio\OPC Kepserver\OPC Kepserver\obj\Debug\OPC Kepserver.pdb
+E:\Program\Visual studio\OPC Kepserver\OPC Kepserver\obj\Debug\OPC_Kepserver.OPCItem.resources
+E:\Program\Visual studio\OPC Kepserver\OPC Kepserver\obj\Debug\OPC_Kepserver.Form1.resources
