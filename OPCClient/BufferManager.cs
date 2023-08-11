@@ -17,6 +17,10 @@ namespace OPCClient
         int m_currentIndex;
         int m_bufferSize;
 
+        object lockobj = new object();
+        // 只读属性，用来获取数据缓冲区
+        public byte[] Buffer { get { return m_buffer; } }
+
         public BufferManager(int totalBytes, int bufferSize)
         {
 
@@ -43,7 +47,10 @@ namespace OPCClient
 
             if (m_freeIndexPool.Count > 0)
             {
-                args.SetBuffer(m_buffer, m_freeIndexPool.Pop(), m_bufferSize);
+                lock(lockobj)
+                {
+                    args.SetBuffer(m_buffer, m_freeIndexPool.Pop(), m_bufferSize);
+                }
             }
             else
             {
@@ -51,8 +58,11 @@ namespace OPCClient
                 {
                     return false;
                 }
-                args.SetBuffer(m_buffer, m_currentIndex, m_bufferSize);
-                m_currentIndex += m_bufferSize;
+                lock (lockobj)
+                {
+                    args.SetBuffer(m_buffer, m_currentIndex, m_bufferSize);
+                    m_currentIndex += m_bufferSize;
+                }
             }
             return true;
         }
@@ -61,8 +71,12 @@ namespace OPCClient
         // This frees the buffer back to the buffer pool
         public void FreeBuffer(SocketAsyncEventArgs args)
         {
-            m_freeIndexPool.Push(args.Offset);
-            args.SetBuffer(null, 0, 0);
+            lock (lockobj)
+            {
+                m_freeIndexPool.Push(args.Offset);
+                args.SetBuffer(null, 0, 0);
+                
+            }
         }
     }
 }

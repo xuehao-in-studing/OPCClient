@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommunicationConfiguration>
+	<OPC_UA_Server_Name>Kepware.KEPServerEX.V6</OPC_UA_Server_Name>
+	<OPC_UA_Server_IP_Address>127.0.0.1</OPC_UA_Server_IP_Address>
+	<OPC_UA_Server_Port_Number>10</OPC_UA_Server_Port_Number>
+	<LowerMachine_IP_Address>127.0.0.1</LowerMachine_IP_Address>
+	<LowerMachine_Port_Number>123</LowerMachine_Port_Number>
+	<SQLServer_ConnectionString>Data Source=192.168.31.218;Initial Catalog=HSX01;User ID=sa;password=873096410</SQLServer_ConnectionString>
+	<SQLServer_ArchiveTableName>UATagArchive</SQLServer_ArchiveTableName>
+	<Group_Int>
+		<Group_Int_OPC_Name>a;b;c;d</Group_Int_OPC_Name>
+		<Group_Int_Writable>True;True;False;False</Group_Int_Writable>
+		<Group_Int_Telegram> ; ;GETPRINTCOUNTER;GETXXXXXParameter01</Group_Int_Telegram>
+		<Group_Int_TagName>LowerPositionTagname01;LowerPositionTagname02; ; </Group_Int_TagName>
+	</Group_Int>
+	<Group_Int>
+		<Group_Int_OPC_Name>a;b;c;d</Group_Int_OPC_Name>
+		<Group_Int_Writable>True;True;False;False</Group_Int_Writable>
+		<Group_Int_Telegram> ; ;GETPRINTCOUNTER;GETXXXXXParameter01</Group_Int_Telegram>
+		<Group_Int_TagName>LowerPositionTagname01;LowerPositionTagname02; ; </Group_Int_TagName>
+	</Group_Int>
+	<Group_Int>
+		<Group_Int_OPC_Name>a;b;c;d</Group_Int_OPC_Name>
+		<Group_Int_Writable>True;True;False;False</Group_Int_Writable>
+		<Group_Int_Telegram> ; ;GETPRINTCOUNTER;GETXXXXXParameter01</Group_Int_Telegram>
+		<Group_Int_TagName>LowerPositionTagname01;LowerPositionTagname02; ; </Group_Int_TagName>
+	</Group_Int>
+	<Group_Int>
+		<Group_Int_OPC_Name>a;b;c;d</Group_Int_OPC_Name>
+		<Group_Int_Writable>True;True;False;False</Group_Int_Writable>
+		<Group_Int_Telegram> ; ;GETPRINTCOUNTER;GETXXXXXParameter01</Group_Int_Telegram>
+		<Group_Int_TagName>LowerPositionTagname01;LowerPositionTagname02; ; </Group_Int_TagName>
+	</Group_Int>
+</CommunicationConfiguration>

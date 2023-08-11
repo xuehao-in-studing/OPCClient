@@ -27,9 +27,9 @@ namespace OPCClient
         private LogClass logger = new LogClass();
 
         // 服务器的名称或者ProgID
-        private String serverName;
+        private String serverIP;
         // 本机IP地址
-        private String serverNode;
+        private String serverName;
 
         // group对象
         private OPCGroups clientGroups;
@@ -39,6 +39,7 @@ namespace OPCClient
         // 存放item的列表
         private List<OPCItem> itemList = new List<OPCItem>();
         private Array itemIDs;
+
         // 客户端分配句柄
         private Array clientHandles;
         // 服务器分配的句柄
@@ -48,12 +49,23 @@ namespace OPCClient
         private int TransactionID = 0;
 
         // 读取节点的数据属性
-        private String[] tagTypes;
-        private String[] tagNames;
+        private string[] tagTypes;
 
+        public string[] TagTypes
+        {
+            get { return tagTypes; }
+            set { tagTypes = value; }
+        }
+        private string[] tagNames;
+        public string[] TagNames
+        {
+            get { return tagNames; }
+            set { tagNames = value; }
+        }
 
         private ManualResetEvent resetEvent = new ManualResetEvent(false);
 
+        // 读取结束的阻塞事件
         public ManualResetEvent ResetEvent
         {
             get { return resetEvent; }
@@ -68,17 +80,16 @@ namespace OPCClient
         // opcserver
         private OPCServer opcServer = new OPCServer();
 
+        public String ServerIP
+        {
+            get { return serverIP; }
+            set { serverIP = value; }
+        }
+
         public String ServerName
         {
             get { return serverName; }
             set { serverName = value; }
-        }
-
-
-        public String ServerNode
-        {
-            get { return serverNode; }
-            set { serverNode = value; }
         }
 
 
@@ -89,13 +100,16 @@ namespace OPCClient
         }
 
         // 读取appSettings配置
-        string[] m_tags = ConfigurationManager.AppSettings.Get("m_tags").Split(';');
-        string[] m_types = ConfigurationManager.AppSettings.Get("m_types").Split(';');
+        //string[] m_tags = ConfigurationManager.AppSettings.Get("m_tags").Split(';');
+        //string[] m_types = ConfigurationManager.AppSettings.Get("m_types").Split(';');
 
         public OpcClient()
         {
-            ServerName = ConfigurationManager.AppSettings.Get("m_service");
-            ServerNode = ConfigurationManager.AppSettings.Get("m_IP");
+        }
+
+
+        public void Init()
+        {
             ConnectToServer();
             SetGroups();
             ItemInit();
@@ -145,7 +159,7 @@ namespace OPCClient
         {
             try
             {
-                opcServer.Connect(ServerName, ServerNode);
+                opcServer.Connect(ServerIP, ServerName);
                 logger.WriteLogFile("OPCClient connect");
             }
             catch (Exception ex) { Console.WriteLine(ex.Message); }
@@ -270,7 +284,7 @@ namespace OPCClient
         /// </summary>
         private void setItemsHandle()
         {
-            int count = tagNames.Count();
+            int count = TagNames.Count();
             List<String> ItemIDs = new List<String>();
             List<int> ClientHandles = new List<int>();
             // 占位符
@@ -281,9 +295,9 @@ namespace OPCClient
             {
                 itemList.Add(new OPCItem()
                 {
-                    ItemID = tagNames[i],
+                    ItemID = TagNames[i],
                 });
-                ItemIDs.Add(tagNames[i]);
+                ItemIDs.Add(TagNames[i]);
                 ClientHandles.Add(i);
             }
             itemIDs = ItemIDs.ToArray();
@@ -296,6 +310,7 @@ namespace OPCClient
             catch (Exception ex) { Console.WriteLine(ex.ToString()); }
         }
         #endregion
+
 
         public void BeginRead()
         {
@@ -326,13 +341,13 @@ namespace OPCClient
             {
                 if (val != null)
                 {
-                    if (m_types[idx] == "bool")
+                    if (TagTypes[idx] == "bool")
                         itemvalue.Value = System.Convert.ToBoolean(System.Convert.ToInt32(val));
-                    if (m_types[idx] == "int")
+                    if (TagTypes[idx] == "int")
                         itemvalue.Value = System.Convert.ToInt32(val);
-                    if (m_types[idx] == "float")
+                    if (TagTypes[idx] == "float")
                         itemvalue.Value = System.Convert.ToDouble(val);
-                    if (m_types[idx] == "string")
+                    if (TagTypes[idx] == "string")
                         itemvalue.Value = val;
                 }
                 itemvalue.TimeStamp = DateTime.Now.ToString();

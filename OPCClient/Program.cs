@@ -11,18 +11,21 @@ namespace OPCClient
     {
         static void Main(string[] args)
         {
-            OpcClient opcclient = new OpcClient();
+            //OpcClient opcclient = new OpcClient();
 
-            Thread.Sleep(1000);
-            opcclient.BeginRead();
-            opcclient.writeitems(null, new object[] { 1, 0, "w69s" });
+            //Thread.Sleep(1000);
+            //opcclient.BeginRead();
+            //opcclient.writeitems(null, new object[] { 1, 0, "w69s" });
 
-            if (opcclient.ResetEvent.WaitOne())
-            {
-                opcclient.Close();
-                Console.ReadKey();
-            }
-
+            //if (opcclient.ResetEvent.WaitOne())
+            //{
+            //    opcclient.Close();
+            //    Console.ReadKey();
+            //}
+            Communication communication = new Communication();
+            communication.LoadComAppConfiguration();
+            communication.Init();
+            Console.ReadLine();
         }
 
 
