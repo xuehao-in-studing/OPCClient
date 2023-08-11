@@ -1,0 +1,8 @@
+E:\Program\Visual studio\OPC Kepserver\TestProj\bin\Debug\TestProj.exe.config
+E:\Program\Visual studio\OPC Kepserver\TestProj\bin\Debug\TestProj.exe
+E:\Program\Visual studio\OPC Kepserver\TestProj\bin\Debug\TestProj.pdb
+E:\Program\Visual studio\OPC Kepserver\TestProj\obj\Debug\TestProj.csproj.AssemblyReference.cache
+E:\Program\Visual studio\OPC Kepserver\TestProj\obj\Debug\TestProj.csproj.SuggestedBindingRedirects.cache
+E:\Program\Visual studio\OPC Kepserver\TestProj\obj\Debug\TestProj.csproj.CoreCompileInputs.cache
+E:\Program\Visual studio\OPC Kepserver\TestProj\obj\Debug\TestProj.exe
+E:\Program\Visual studio\OPC Kepserver\TestProj\obj\Debug\TestProj.pdb

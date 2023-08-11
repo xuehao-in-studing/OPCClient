@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -50,6 +51,23 @@ namespace OPCClient
         private String[] tagTypes;
         private String[] tagNames;
 
+
+        private ManualResetEvent resetEvent = new ManualResetEvent(false);
+
+        public ManualResetEvent ResetEvent
+        {
+            get { return resetEvent; }
+            set {
+                if (value != null)
+                    resetEvent = value;
+                else
+                    throw new ArgumentException("设置非引用类型");
+            }
+        }
+
+        // opcserver
+        private OPCServer opcServer = new OPCServer();
+
         public String ServerName
         {
             get { return serverName; }
@@ -63,7 +81,6 @@ namespace OPCClient
             set { serverNode = value; }
         }
 
-        private OPCServer opcServer = new OPCServer();
 
         public OPCServer OpcServer
         {
@@ -87,36 +104,52 @@ namespace OPCClient
         /// <summary>
         /// 连接到OPC服务器
         /// </summary>
-        public void ConnectToServer()
-        {
-            try
-            {
-                object servers = opcServer.GetOPCServers(ServerNode);
-                if (servers != null)
-                {
-                    foreach (var server in (Array)servers)
-                    {
-                        opcServer.Connect(ServerName, ServerNode);
-                        logger.WriteLogFile("OPCClient connect");
-                        break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
         //public void ConnectToServer()
         //{
         //    try
         //    {
-        //        opcServer.Connect(ServerName, ServerNode);
-        //        logger.WriteLogFile("OPCClient connect");
+        //        object servers = opcServer.GetOPCServers(ServerNode);
+        //        if (servers != null)
+        //        {
+        //            foreach (var server in (Array)servers)
+        //            {
+        //                opcServer.Connect(ServerName, ServerNode);
+        //                logger.WriteLogFile("OPCClient connect");
+        //                break;
+        //            }
+        //        }
         //    }
-        //    catch (Exception ex) { Console.WriteLine(ex.Message); }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //    }
         //}
+
+        public void Close()
+        {
+            try
+            {
+                // 1 equals running
+                // OPCServerState.OPCRunning equals 1
+                if(opcServer.ServerState == 1)
+                {
+                    opcServer.Disconnect();
+                    Console.WriteLine("OPC client已关闭");
+                }
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
+        }
+
+
+        public void ConnectToServer()
+        {
+            try
+            {
+                opcServer.Connect(ServerName, ServerNode);
+                logger.WriteLogFile("OPCClient connect");
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
+        }
 
 
         /// <summary>
@@ -140,6 +173,12 @@ namespace OPCClient
             clientGroup.AsyncWriteComplete += ClientGroup_AsyncWriteComplete;
         }
 
+        private void ClientGroup_AsyncWriteComplete(int TransactionID, int NumItems, ref Array ClientHandles, ref Array Errors)
+        {
+            Console.WriteLine("写完成调用回调");
+            //throw new NotImplementedException();
+        }
+
         /// <summary>
         /// 订阅响应函数
         /// </summary>
@@ -155,21 +194,18 @@ namespace OPCClient
             {
                 if (NumItems != 0 && ItemValues != null)
                 {
+                    string splitString = "====================" + "====================";
+                    Console.WriteLine(splitString + "\nWe are now DataChange Method\n" + splitString);
                     for (int i = 1; i <= NumItems; i++)
                     {
+                        int listIdx = (int)ClientHandles.GetValue(i);
                         var val = ItemValues.GetValue(i);
-                        //switch (tagTypes[i - 1])
-                        //{
-                        //    case "string": val = (string)val; break;
-                        //    case "int": val = (int)val; break;
-                        //    case "float": val = (float)val; break;
-                        //    case "bool": val = (bool)val; break;
-                        //}
-                        itemList[i - 1].Value = val;
-                        itemList[i - 1].Quality = (int)Qualities.GetValue(i);
-                        itemList[i - 1].TimeStamp = TimeStamps.GetValue(i).ToString();
-                        Console.WriteLine($"第{i}个数发生变化,DataType{tagTypes[i - 1]}");
-                        Console.WriteLine($"value:{itemList[i - 1].Value},quality:{itemList[i - 1].Quality.ToString()},time:{itemList[i - 1].TimeStamp}");
+
+                        itemList[listIdx].Value = val;
+                        itemList[listIdx].Quality = (int)Qualities.GetValue(i);
+                        itemList[listIdx].TimeStamp = TimeStamps.GetValue(i).ToString();
+                        Console.WriteLine($"读取第{i}个数完毕,DataType:{tagTypes[listIdx]}");
+                        Console.WriteLine($"value:{itemList[listIdx].Value},quality:{itemList[listIdx].Quality.ToString()},time:{itemList[listIdx].TimeStamp}");
                     }
                 }
 
@@ -182,11 +218,6 @@ namespace OPCClient
             }
         }
 
-        private void ClientGroup_AsyncWriteComplete(int TransactionID, int NumItems, ref Array ClientHandles, ref Array Errors)
-        {
-            Console.WriteLine("not implemented");
-            //throw new NotImplementedException();
-        }
 
 
         private void ClientGroup_AsyncReadComplete(int TransactionID, int NumItems, ref Array ClientHandles, ref Array ItemValues, ref Array Qualities, ref Array TimeStamps, ref Array Errors)
@@ -195,8 +226,11 @@ namespace OPCClient
             {
                 if (NumItems != 0 && ItemValues != null)
                 {
+                    string splitString = "====================" + "====================";
+                    Console.WriteLine(splitString + "\nWe are now AsyncReadComplete Method\n" + splitString);
                     for (int i = 1; i <= NumItems; i++)
                     {
+                        int listIdx = (int)ClientHandles.GetValue(i);
                         var val = ItemValues.GetValue(i);
                         //switch (tagTypes[i - 1])
                         //{
@@ -205,17 +239,17 @@ namespace OPCClient
                         //    case "float": val = (float)val; break;
                         //    case "bool": val = (bool)val; break;
                         //}
-                        itemList[i - 1].Value = val;
-                        itemList[i - 1].Quality = (int)Qualities.GetValue(i);
-                        itemList[i - 1].TimeStamp = TimeStamps.GetValue(i).ToString();
-                        Console.WriteLine($"读取第{i}个数完毕,DataType{tagTypes[i - 1]}");
-                        Console.WriteLine($"value:{itemList[i - 1].Value},quality:{itemList[i - 1].Quality.ToString()},time:{itemList[i - 1].TimeStamp}");
+                        itemList[listIdx].Value = val;
+                        itemList[listIdx].Quality = (int)Qualities.GetValue(i);
+                        itemList[listIdx].TimeStamp = TimeStamps.GetValue(i).ToString();
+
+                        // 信号量置位
+                        ResetEvent.Set();
+
+                        Console.WriteLine($"读取第{i}个数完毕,DataType:{tagTypes[listIdx]}");
+                        Console.WriteLine($"value:{itemList[listIdx].Value},quality:{itemList[listIdx].Quality.ToString()},time:{itemList[listIdx].TimeStamp}");
                     }
                 }
-
-                // 50ms读取一次
-                Thread.Sleep(50);
-                clientGroup.AsyncRead(tagNames.Count(), ref serverHanelds, out errors, TransactionID, out cancellID);
             }
             catch (Exception ex)
             {
@@ -302,7 +336,7 @@ namespace OPCClient
                         itemvalue.Value = val;
                 }
                 itemvalue.TimeStamp = DateTime.Now.ToString();
-                // 测试同步写
+                // 测试异步写
                 try
                 {
                     Array Values = Array.CreateInstance(typeof(object), 2);
@@ -314,6 +348,7 @@ namespace OPCClient
                     Handles.Add(int.Parse(serverHanelds.GetValue(idx + 1).ToString()));
 
                     clientGroup.AsyncWrite(1, Handles.ToArray(), Values, out errors, TransactionID, out cancellID);
+                    //clientGroup.SyncWrite(1, Handles.ToArray(),Values,out errors);
                     Console.WriteLine($"item{idx} has changed,value is from {itemList[idx].Value} to {val}");
                 }
                 catch (Exception e)
@@ -348,10 +383,5 @@ namespace OPCClient
             }
         }
 
-        private void ClientGroup_AsyncWriteComplete1(int TransactionID, int NumItems, ref Array ClientHandles, ref Array Errors)
-        {
-            Console.WriteLine("向opc写值成功");
-
-        }
     }
 }

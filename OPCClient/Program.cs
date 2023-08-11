@@ -13,12 +13,16 @@ namespace OPCClient
         {
             OpcClient opcclient = new OpcClient();
 
+            Thread.Sleep(1000);
             opcclient.BeginRead();
-            opcclient.writeitems(new int[] {1,2},new object[] {1,1,"over"});
-            //Thread.Sleep(1000);
-            opcclient.writeitem(0,0);
-            //SocketClient socketclient = new SocketClient();
-            Console.ReadKey();
+            opcclient.writeitems(null, new object[] { 1, 0, "w69s" });
+
+            if (opcclient.ResetEvent.WaitOne())
+            {
+                opcclient.Close();
+                Console.ReadKey();
+            }
+
         }
 
 
